@@ -1,33 +1,40 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    public function store(Request $request, Product $product)
+    public function store(Product $product)
     {
-        $request->validate([
-            'qty' => 'required|integer|min:1',
+        $qty = request('qty', 1);
+        $total = $product->price * $qty;
+
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'total'   => $total,
+            'status'  => 'pending',
         ]);
 
-        Order::create([
-            'user_id' => auth()->id(),
+        OrderItem::create([
+            'order_id'   => $order->id,
             'product_id' => $product->id,
-            'qty' => $request->qty,
-            'price' => $product->price,
-            'total' => $product->price * $request->qty,
+            'quantity'   => $qty,
+            'price'      => $product->price,
         ]);
 
         return redirect()->route('orders.mine')
-            ->with('success','Pesanan berhasil dibuat');
+            ->with('success', 'Pesanan berhasil dibuat');
     }
 
+    // 🔥 INI YANG KURANG
     public function myOrders()
     {
-        $orders = Order::with('product')
+        $orders = Order::with('items.product')
             ->where('user_id', auth()->id())
             ->latest()
             ->get();

@@ -10,8 +10,17 @@ class OrderController extends Controller
 {
    public function index()
    {
-       $orders = Order::with(['product', 'user'])->latest()->get();
-       return view('admin.orders.index', compact('orders'));
+     $user = auth()->user();
+
+    if ($user->role === 'masteradmin') {
+        $orders = Order::latest()->get();
+    } else {
+        $orders = Order::whereHas('items.product', function ($q) use ($user) {
+            $q->where('admin_id', $user->id);
+        })->latest()->get();
+    }
+
+    return view('admin.orders.index', compact('orders'));
    }        
 
    public function update(Order $order){

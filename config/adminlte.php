@@ -303,26 +303,43 @@ return [
         'text' => 'Dashboard',
         'route' => 'admin.dashboard',
         'icon' => 'fas fa-tachometer-alt',
+        'can' => 'isAdmin',
     ],
     [
         'text' => 'Kategori',
         'route' => 'admin.categories.index',
         'icon' => 'fas fa-list',
+          'can'  => 'isAdmin',
     ],
     [
         'text' => 'Produk',
         'route' => 'admin.products.index',
         'icon' => 'fas fa-box',
+          'can'  => 'isAdmin',
     ],
+    [
+    'text' => 'Pesanan',
+    'url'  => 'admin/orders',
+    'icon' => 'fas fa-shopping-cart',
+      'can'  => 'isAdmin',
+],
     [
         'text' => 'Ulasan',
         'route' => 'admin.reviews.index',
         'icon' => 'fas fa-star',
+          'can'  => 'isAdmin',
     ],
     [
         'text' => 'Forum',
         'route' => 'admin.forums.index',
         'icon' => 'fas fa-comments',
+        'can'  => 'isMasterAdmin',
+    ],
+      [
+        'text' => 'Artikel',
+        'url'  => 'admin/articles',
+        'icon' => 'fas fa-newspaper',
+          'can'  => 'isAdmin',
     ],
 ],
 
